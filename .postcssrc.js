@@ -3,7 +3,7 @@ module.exports = {
   plugins: {
     "autoprefixer": {},
     "postcss-pxtorem": {
-      "rootValue": 37.5, // 设计稿宽度的1/10
+      "rootValue": 75, // 设计稿宽度的1/10
       "unitPrecision": 4, // 小数位
       "minPixelValue": 2, // 转换的最小单位
       "selectorBlackList": [], // 忽略的样式, 正则
