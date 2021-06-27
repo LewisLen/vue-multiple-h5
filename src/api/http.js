@@ -1,6 +1,6 @@
-import axios from "axios";
-import baseURL from "./environment";
-import checkStatus from "./checkStatus";
+import axios from 'axios';
+import baseURL from './environment';
+import checkStatus from './checkStatus';
 
 const instance = axios.create({
   baseURL,
@@ -20,10 +20,10 @@ const instance = axios.create({
   ],
   headers: {
     get: {
-      "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+      'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
     },
     post: {
-      "Content-Type": "application/json;charset=utf-8",
+      'Content-Type': 'application/json;charset=utf-8',
     },
   },
 });
@@ -32,7 +32,7 @@ const instance = axios.create({
 instance.interceptors.request.use(
   (config) => {
     // loading
-    console.log("load...");
+    console.log('load...');
     // 设置请求头 token等
     // token有可能是放在sessionStorage或者store里
     // if(token){
@@ -41,8 +41,8 @@ instance.interceptors.request.use(
     return config;
   },
   (error) => {
-    error.data = "";
-    error.data.msg = "服务器异常!!!";
+    error.data = '';
+    error.data.msg = '服务器异常!!!';
     return Promise.reject(error);
   }
 );
@@ -56,7 +56,7 @@ instance.interceptors.response.use(
       return Promise.resolve(data);
     } else {
       let error = checkStatus(res);
-      return Promise.reject(error || "error");
+      return Promise.reject(error || 'error');
     }
   },
   (error) => {
