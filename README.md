@@ -1,6 +1,6 @@
 # vue-h5
 
-基于vue-cli4.x多页面移动端页面打包开箱即用
+基于vue-cli4.x的eslint+prettier模版的多页面移动端脚手架，开箱即用
 
 ## 安装和启动
 
@@ -28,7 +28,7 @@ module.exports = {
   plugins: {
     "autoprefixer": {},
     "postcss-pxtorem": {
-      "rootValue": 37.5, // 设计稿宽度的1/10
+      "rootValue": 75, // 设计稿宽度的1/10
       "unitPrecision": 4, // 小数位
       "minPixelValue": 2, // 转换的最小单位
       "selectorBlackList": [], // 忽略的样式, 正则
@@ -41,3 +41,35 @@ module.exports = {
 
 > 出现报错: Syntax Error: Error: PostCSS plugin postcss-pxtorem requires PostCSS 8.
 > 解决方案，安装postcss-pxtorem@5.1.1版本: npm install postcss-pxtorem@5.1.1 -D
+
+## eslint + prettier
+
+vscode 安装 ESlint 和 prettier 插件
+
+```json
+// settings.json部分配置
+{
+    // eslint+prettier格式化代码
+    "eslint.alwaysShowStatus": true,
+    "eslint.run": "onSave",
+    // 自动修复代码
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    "eslint.probe": [
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+        "html",
+        "vue"
+    ],
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "html",
+        "vue",
+    ],
+    "prettier.useTabs": true,
+}
+```
