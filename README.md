@@ -2,6 +2,7 @@
 
 基于vue-cli4.x的eslint+prettier模版的多页面移动端脚手架，开箱即用
 
+
 ## 安装和启动
 
 ```shell
@@ -14,6 +15,7 @@ cd vue-h5
 npm install
 npm run serve
 ```
+
 
 ## 移动端适配
 
@@ -42,34 +44,75 @@ module.exports = {
 > 出现报错: Syntax Error: Error: PostCSS plugin postcss-pxtorem requires PostCSS 8.
 > 解决方案，安装postcss-pxtorem@5.1.1版本: npm install postcss-pxtorem@5.1.1 -D
 
+
 ## eslint + prettier
 
-vscode 安装 ESlint 和 prettier 插件
+VSCode 安装 ESlint 和 prettier 插件
 
-```json
-// settings.json部分配置
-{
-    // eslint+prettier格式化代码
-    "eslint.alwaysShowStatus": true,
-    "eslint.run": "onSave",
-    // 自动修复代码
-    "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": true
-    },
-    "eslint.probe": [
-        "javascript",
-        "javascriptreact",
-        "typescript",
-        "typescriptreact",
-        "html",
-        "vue"
-    ],
-    "eslint.validate": [
-        "javascript",
-        "javascriptreact",
-        "html",
-        "vue",
-    ],
-    "prettier.useTabs": true,
+主要依赖：
+
+```javascript
+// package.json
+"devDependencies": {
+  "@vue/cli-plugin-eslint": "~4.5.0",
+  "@vue/eslint-config-prettier": "^6.0.0",
+  "eslint": "^6.7.2",
+  "eslint-plugin-prettier": "^3.3.1",
+  "eslint-plugin-vue": "^6.2.2",
+  "prettier": "^2.2.1",
 }
+// .eslintrc.js
+extends: [
+  "plugin:vue/essential", 
+  "eslint:recommended", // 推荐eslint规则
+  "@vue/prettier",
+  "plugin:prettier/recommended", // 如果同时使用了eslint和prettier发生冲突了，会关闭掉与prettier有冲突的规则，也就是使用prettier认为对的规则
+],
 ```
+
+VSCode 主要设置
+
+```javascript
+// settings.json部分配置
+"vetur.ignoreProjectWarning": true,
+"vetur.format.defaultFormatterOptions": {
+    "js-beautify-html": {
+        "wrap_attributes": "force-expand-multiline"
+    },
+    "prettyhtml": {
+        "printWidth": 100,
+        "singleQuote": false,
+        "wrapAttributes": false,
+        "sortAttributes": false
+    }
+},
+"explorer.confirmDragAndDrop": false,
+"explorer.confirmDelete": false,
+// eslint+prettier格式化代码
+"eslint.alwaysShowStatus": true,
+"eslint.run": "onSave",
+// 自动修复代码
+"editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+},
+"eslint.probe": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "vue",
+],
+"eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "vue",
+],
+"prettier.useTabs": true,
+```
+
+
+## 封装axios
+
+安装`axios`和`qs`
