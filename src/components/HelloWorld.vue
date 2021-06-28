@@ -56,6 +56,11 @@ export default {
       ],
     };
   },
+  created() {
+    this.$http.get("/api/productList").then((res) => {
+      console.log(res);
+    });
+  },
 };
 </script>
 <style scoped>
