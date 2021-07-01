@@ -2,19 +2,18 @@ import axios from "axios";
 import baseURL from "./environment";
 import errorHandle from "./errorHandle";
 import store from "../store/index";
-import qs from "qs";
+import QS from "qs";
 
 const instance = axios.create({
   baseURL,
   // 跨域请求时是否需要使用凭证
-  // withCredentials: true,
+  withCredentials: true,
   // 请求超时时间
-  timeout: 10000,
+  timeout: 10 * 1000,
   // 向服务器发送请求前，修改请求数据
   transformRequest: [
     function (data) {
-      data = JSON.stringify(data);
-      return data;
+      return QS.stringify(data);
     },
   ],
   // 在传递给 then/catch 前，修改响应数据
@@ -27,11 +26,8 @@ const instance = axios.create({
     },
   ],
   headers: {
-    get: {
-      "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
-    },
     post: {
-      "Content-Type": "application/json;charset=utf-8",
+      "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
     },
   },
 });
@@ -68,8 +64,8 @@ instance.interceptors.response.use(
       return Promise.resolve(data);
     } else if (returnCode === "999") {
       // 自定义重定向处理
-      console.log("重定向处理");
       setTimeout(() => {
+        console.log("重定向处理");
         console.log("clear loading...");
       }, 3000);
     } else {
@@ -90,15 +86,3 @@ instance.interceptors.response.use(
 );
 
 export default instance;
-
-// get请求
-export function get(url, params) {
-  console.log("===get请求===");
-  return axios.get(url, { params });
-}
-
-// post请求
-export function post(url, params) {
-  console.log("===post请求===");
-  return axios.get(url, qs.stringify(params));
-}

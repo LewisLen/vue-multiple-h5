@@ -5,13 +5,13 @@ let baseURL = "";
 // 根据环境来切换请求baseURL
 switch (NODE_ENV) {
   case "development":
-    baseURL = BASE_URL || "https://www.dev.com/";
+    baseURL = BASE_URL || "";
     break;
   case "production":
     baseURL = BASE_URL || "https://www.prod.com/";
     break;
   default:
-    baseURL = BASE_URL || "https://www.dev.com/";
+    baseURL = BASE_URL || "";
     break;
 }
 export default baseURL;

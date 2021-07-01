@@ -14,6 +14,7 @@
   </div>
 </template>
 <script>
+import { getProductList } from "../api/apis/product";
 export default {
   data() {
     return {
@@ -57,7 +58,7 @@ export default {
     };
   },
   created() {
-    this.$http.get("/api/productList").then((res) => {
+    getProductList().then((res) => {
       console.log(res);
     });
   },

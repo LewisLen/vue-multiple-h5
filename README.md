@@ -116,3 +116,25 @@ VSCode 主要设置
 ## 封装axios
 
 安装`axios`和`qs`
+
+
+取消请求
+
+```javascript
+// 方式一
+const cancelToken = axios.CancelToken;
+const source = CancelToken.source();
+axios.post('/productList',{code:'0001'},{
+  cancelToken: source.token
+})
+source.cancel('取消请求')
+// 方式二
+const cancelToken = axios.CancelToken;
+let cancel;
+axios.get('/productList',{
+  cancelToken: new cancelToken(function executor(c){
+    cancel = c;
+  })
+})
+cancel();// 取消请求
+```
