@@ -15,6 +15,7 @@ const CodeList = {
   [505]: "HTTP版本不受支持",
 };
 export default function errorHandle(code, message) {
+  console.log("====code====");
   if (code) {
     let errMessage = CodeList[code]; // 错误消息
     return {

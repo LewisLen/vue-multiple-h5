@@ -1,13 +1,13 @@
 <template>
   <div class="content">
     <ul>
-      <li v-for="item in list" :key="item.id">
+      <li v-for="item in list" :key="item._id">
         <div class="img">img</div>
         <div class="text">
-          <div class="title">{{ item.title }}</div>
-          <p class="describe">{{ item.describe }}</p>
-          <p class="star">{{ item.star }}</p>
-          <p class="amount">{{ item.amount }}</p>
+          <div class="title">{{ item.productName }}</div>
+          <p class="describe">{{ item.typeText }}</p>
+          <p class="star">{{ item.typeId }}</p>
+          <p class="amount">{{ item.price }}</p>
         </div>
       </li>
     </ul>
@@ -18,48 +18,50 @@ import { getProductList } from "../api/apis/product";
 export default {
   data() {
     return {
-      list: [
-        {
-          id: "001",
-          title: "唐装",
-          describe: "快来买呀快来买呀快来买呀快来买呀",
-          star: "4.0",
-          amount: "5000元",
-        },
-        {
-          id: "002",
-          title: "唐装",
-          describe: "快来买呀快来买呀快来买呀快来买呀",
-          star: "4.0",
-          amount: "5000元",
-        },
-        {
-          id: "003",
-          title: "唐装",
-          describe: "快来买呀快来买呀快来买呀快来买呀",
-          star: "4.0",
-          amount: "5000元",
-        },
-        {
-          id: "004",
-          title: "唐装",
-          describe: "快来买呀快来买呀快来买呀快来买呀",
-          star: "4.0",
-          amount: "5000元",
-        },
-        {
-          id: "005",
-          title: "唐装",
-          describe: "快来买呀快来买呀快来买呀快来买呀",
-          star: "4.0",
-          amount: "5000元",
-        },
-      ],
+      list: [],
+      // list: [
+      //   {
+      //     _id: "001",
+      //     productName: "唐装",
+      //     typeText: "快来买呀快来买呀快来买呀快来买呀",
+      //     typeId: "4.0",
+      //     price: "5000元",
+      //   },
+      //   {
+      //     _id: "002",
+      //     productName: "唐装",
+      //     typeText: "快来买呀快来买呀快来买呀快来买呀",
+      //     typeId: "4.0",
+      //     price: "5000元",
+      //   },
+      //   {
+      //     _id: "003",
+      //     productName: "唐装",
+      //     typeText: "快来买呀快来买呀快来买呀快来买呀",
+      //     typeId: "4.0",
+      //     price: "5000元",
+      //   },
+      //   {
+      //     _id: "004",
+      //     productName: "唐装",
+      //     typeText: "快来买呀快来买呀快来买呀快来买呀",
+      //     typeId: "4.0",
+      //     price: "5000元",
+      //   },
+      //   {
+      //     _id: "005",
+      //     productName: "唐装",
+      //     typeText: "快来买呀快来买呀快来买呀快来买呀",
+      //     typeId: "4.0",
+      //     price: "5000元",
+      //   },
+      // ],
     };
   },
   created() {
     getProductList().then((res) => {
-      console.log(res);
+      // console.log(res);
+      this.list = res.data;
     });
   },
 };
@@ -71,7 +73,6 @@ export default {
 }
 .content li {
   display: flex;
-  justify-content: space-between;
   padding-bottom: 40px;
   padding-top: 40px;
   border-bottom: 2px solid #f4f4f4;
@@ -83,6 +84,7 @@ export default {
 }
 .content .text {
   height: 192px;
+  margin-left: 40px;
 }
 .content .title {
   opacity: 0.9;

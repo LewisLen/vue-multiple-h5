@@ -1,9 +1,10 @@
 import request from "../request";
+import QS from "qs";
 
 export function getProductList(data) {
   return request({
-    url: "/api/productList",
+    url: "api/productList",
     method: "get", // 默认是get
-    data,
+    data: QS.stringify(data),
   });
 }
