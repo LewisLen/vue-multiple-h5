@@ -13,10 +13,10 @@ export default {
   },
   methods: {
     switchFn() {
-      console.log(this.path);
-      // this.$router.replace({
-      //   path: this.path,
-      // });
+      // 模拟登录之后跳回
+      this.$router.replace({
+        path: this.path,
+      });
     },
   },
   beforeRouteEnter(to, from, next) {

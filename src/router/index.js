@@ -64,9 +64,12 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   // 登录权限
   if (!to.meta.auth) {
-    next({
-      path: "/login",
-    });
+    console.log(!to.meta.auth, to.fullPath);
+    setTimeout(() => {
+      next({
+        path: "/login",
+      });
+    }, 3000);
   }
   // 设置页面标题
   if (to.meta.title) {
