@@ -160,9 +160,10 @@ axios.get('/productList',{
 cancel();// 取消请求
 ```
 
+
 ## 多环境配置
 
-根目录下新增`.env.uat`文件，并在 package.json 中田添加对应的命令行
+根目录下新增`.env.uat`文件，并在 package.json 中添加对应的命令行。只有`NODE_ENV`、`BASE_URL`和以`VUE_APP_`开头的变量将通过 `webpack.DefinePlugin`静态地嵌入到客户端侧的代码中。在开发中可以通过`process.env.VUE_APP_*`来访问相关变量。
 
 ```javascript
 // .env.uat
@@ -172,4 +173,63 @@ VUE_APP_baseURL = 'https://www.uat.com/'
 
 // package.json
 "uat": "vue-cli-service build --mode uat",
+```
+
+
+## fastClick
+
+移动端浏览器会在 touchend 和 click 事件之间，等待300-350ms，判断用户是否会进行双击首饰用以缩放文字（主要是用于修复苹果ios系统的bug）
+
+
+## vue-router
+
+路由懒加载
+
+```javascript
+// 路由懒加载
+const Task = () => import("../views/Task.vue");// ES6方式
+const routes = [
+  {
+    path: "/task",
+    name: "Task",
+    component: (resolve) => require(["../views/Task.vue"], resolve),
+    meta: {
+      title: "任务",
+      keepAlive: false, // 是否需要缓存
+      auth: false, // 用户权限
+    },
+  }
+]
+```
+
+路由守卫
+
+```javascript
+router.beforEach((to,from,next) => {
+  // 路由拦截
+  if(!to.meta.auth){
+    console.log('无权限')
+  }
+  // 设置页面标题
+  if(to.meta.title){
+    document.title = to.meta.title;
+  }
+  next();
+})
+```
+
+也可以通过 webpack 中的 require.context(要搜索的目录,是否要搜索子目录,匹配文件的正则表达式) 函数自动注册匹配路由。
+
+```javascript
+// 自动注册路由，但是不方便添加meta信息
+let tempRouters = [];
+const oFiles = require.context("../views", true, /\.vue$/);
+oFiles.keys().forEach((element) => {
+  // element: ./Task.vue
+  let componentName = element.replace(/^\.\//, "").replace(/\.vue$/, "");
+  tempRouters.push({
+    path: "/" + componentName.toLowerCase(),
+    component: () => import("../views/" + componentName),
+  });
+});
 ```
