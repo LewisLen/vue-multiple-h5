@@ -115,10 +115,31 @@ VSCode 主要设置
 
 ## 封装axios
 
-安装`axios`和`qs`
+安装`axios`和`qs`，利用 interceptors 拦截器对 axios 请求进行封装
 
+```javascript
+// 引用方式一 main.js
+import request from "./api/request";
+Vue.prototype.$http = request;// 挂载到原型对象上
+// 组件中
+this.$http.get("api/productList").then((res) => {
+  console.log(res);
+});
+// 引用方式二：每个请求按模块划分
+// product.js
+import request from "../request";
+import QS from "qs";
 
-取消请求
+export function getProductList(data) {
+  return request({
+    url: "api/productList",
+    method: "get", // 默认是get
+    data: QS.stringify(data),
+  });
+}
+```
+
+取消请求方式
 
 ```javascript
 // 方式一
@@ -137,4 +158,18 @@ axios.get('/productList',{
   })
 })
 cancel();// 取消请求
+```
+
+## 多环境配置
+
+根目录下新增`.env.uat`文件，并在 package.json 中田添加对应的命令行
+
+```javascript
+// .env.uat
+NODE_ENV = 'production'
+VUE_APP_MODE = 'uat'
+VUE_APP_baseURL = 'https://www.uat.com/'
+
+// package.json
+"uat": "vue-cli-service build --mode uat",
 ```

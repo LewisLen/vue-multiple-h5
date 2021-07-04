@@ -5,6 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "sit": "vue-cli-service build --mode sit",
+    "uat": "vue-cli-service build --mode uat",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
