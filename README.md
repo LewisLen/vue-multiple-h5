@@ -205,7 +205,7 @@ const routes = [
 路由守卫
 
 ```javascript
-router.beforEach((to,from,next) => {
+router.beforeEach((to,from,next) => {
   // 路由拦截
   if(!to.meta.auth){
     console.log('无权限')
