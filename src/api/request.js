@@ -1,5 +1,5 @@
 import axios from "axios";
-import baseURL from "./environment";
+import baseURL from "@/api/environment";
 import errorHandle from "./errorHandle";
 import store from "../store/index";
 const instance = axios.create({

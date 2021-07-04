@@ -12,6 +12,11 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
+    meta: {
+      title: "首页",
+      keepAlive: false, // 是否需要缓存
+      auth: true, // 用户权限
+    },
   },
   {
     path: "/login",
