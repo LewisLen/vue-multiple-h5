@@ -73,6 +73,9 @@ router.beforeEach((to, from, next) => {
     setTimeout(() => {
       next({
         path: "/login",
+        query: {
+          redirect: to.fullPath,
+        },
       });
     }, 3000);
   }

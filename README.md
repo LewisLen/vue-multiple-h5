@@ -233,3 +233,16 @@ oFiles.keys().forEach((element) => {
   });
 });
 ```
+
+
+## vuex
+
+
+## webpack-bundle-analyzer
+
+webpack-bundle-analyzer 插件用于打包分析包大小，用于优化性能分析
+
+```javascript
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+config.plugin("webpack-bundle-analyzer").use(BundleAnalyzerPlugin);
+```
