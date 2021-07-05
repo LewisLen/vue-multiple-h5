@@ -244,5 +244,13 @@ webpack-bundle-analyzer 插件用于打包分析包大小，用于优化性能�
 
 ```javascript
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
-config.plugin("webpack-bundle-analyzer").use(BundleAnalyzerPlugin);
+if (process.env.NODE_ENV === "production") {
+  config.plugin("webpack-bundle-analyzer").use(BundleAnalyzerPlugin);
+}
+```
+
+执行命令查看包大小图
+
+```shell
+npm run build --report
 ```
