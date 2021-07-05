@@ -254,3 +254,50 @@ if (process.env.NODE_ENV === "production") {
 ```shell
 npm run build --report
 ```
+
+
+## 生产环境去掉console.log
+
+
+## splitChunks分包策略
+
+分包策略可以将一些第三方模块的依赖单独生成一个js文件，可以减少公共js文件大小，并且对于没有用到的模块文件，加载解析时候不会有多余的http请求
+
+```javascript
+chainWebpack: config => {
+  config.optimization.splitChunks({
+    // 抽离自定义公共组件
+    chunks: 'all',
+    minChunks: 1, // 要拆分的chunk最少被引用的次数
+    maxSize: 0,
+    minSize: 30*1024, // 分割的chunk最小为30kb
+    maxAsyncRequests: 5,// 当这个要被拆分出来的包被引用的次数超过5时，则不拆分
+    maxInitalRequests: 3,// 当这个要被拆分出来的包最大并行请求大于3时，则不拆分
+    automaticNameDelimiter: '~', // 名称链接符
+    cacheGroups:{
+      //  满足上面的公共规则
+      vendors:{
+          name: 'vendors', // 拆分之后的名称
+          test: /[\\/]node_modules[\\/]js[\\/]jweixin[\\/]/, // 匹配路径
+          priority: -10, // 设置优先级 防止和自定义组件混合，不进行打包
+          
+      },
+      default:{
+        minChunks: 2, // 要拆分的chunk最少被引用的次数
+        priority: -20,
+        reuseExistingChunk: true //	如果该chunk中引用了已经被打包，则直接引用该chunk，不会重复打包代码
+      }
+      html2canvas: { 
+        name: 'html2canvas', // 拆分之后的名称
+        test: /[\\/]static[\\/]js[\\/]html2canvas[\\/]/, // 匹配路径
+        reuseExistingChunk: true
+      },
+    }
+  })
+}
+```
+
+
+## externals用cdn链接的方式引入资源
+
+externals 引入方式的作用需谨慎评估，确实能够减少编译包大小，但是需要额外在html文件上添加script标签以引入js文件，这就意味着需要额外的http请求以及更多的解析时间。
