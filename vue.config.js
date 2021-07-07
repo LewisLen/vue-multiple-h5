@@ -15,7 +15,10 @@ module.exports = {
   // 生产环境是否需要source map
   productionSourceMap: false,
   configureWebpack: {
-    plugins: [],
+    externals: {
+      vue: "Vue",
+      "vue-router": "VueRouter",
+    },
   },
   // 链式调用
   chainWebpack: (config) => {
@@ -28,6 +31,16 @@ module.exports = {
     if (process.env.NODE_ENV === "production") {
       config.plugin("webpack-bundle-analyzer").use(BundleAnalyzerPlugin);
     }
+    const cdn = {
+      js: [
+        "//unpkg.com/vue@2.6.11/dist/vue.min.js",
+        "//unpkg.com/vue-router@3.2.0/dist/vue-router.min.js",
+      ],
+    };
+    config.plugin("html").tap((args) => {
+      args[0].cdn = cdn;
+      return args;
+    });
   },
   // 选项...
   devServer: {
