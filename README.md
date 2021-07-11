@@ -268,6 +268,17 @@ if (process.env.NODE_ENV === "production" && USE_ANALYZER) {
 
 ## 生产环境去掉console.log
 
+vue-cli4 自带有去除console的插件 terser-webpack-plugin 所以直接使用即可
+
+```javascript
+if (process.env.NODE_ENV === "production") {
+  config.optimization.minimizer("terser").tap((options) => {
+    options[0].terserOptions.compress.drop_console = true;
+    return options;
+  });
+}
+```
+
 
 ## splitChunks分包策略
 

@@ -36,14 +36,20 @@ module.exports = {
       args[0].cdn = cdn;
       return args;
     });
+    if (process.env.NODE_ENV === "production") {
+      config.optimization.minimizer("terser").tap((options) => {
+        options[0].terserOptions.compress.drop_console = true;
+        return options;
+      });
+    }
     config.optimization.splitChunks({
       // 抽离自定义公共组件
       chunks: "all",
       minChunks: 1, // 要拆分的chunk最少被引用的次数
       maxSize: 0,
       minSize: 30 * 1024, // 分割的chunk最小为30kb
-      maxAsyncRequests: 5, // 当这个要被拆分出来的包被引用的次数超过5时，则不拆分
-      maxInitalRequests: 3, // 当这个要被拆分出来的包最大并行请求大于3时，则不拆分
+      // maxAsyncRequests: 5, // 当这个要被拆分出来的包被引用的次数超过5时，则不拆分
+      // maxInitalRequests: 3, // 当这个要被拆分出来的包最大并行请求大于3时，则不拆分
       automaticNameDelimiter: "~", // 名称链接符
       cacheGroups: {
         //  满足上面的公共规则
