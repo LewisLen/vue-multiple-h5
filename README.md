@@ -240,19 +240,29 @@ oFiles.keys().forEach((element) => {
 
 ## webpack-bundle-analyzer
 
-webpack-bundle-analyzer 插件用于打包分析包大小，用于优化性能分析
+vue-cli4已经支持 webpack-bundle-analyzer 插件的使用了，如果没有用可以直接安装插件应用就行，主要是用于打包分析包大小，用于优化性能分析。
+
+执行命令后会在 dist 文件夹生成一个 report.html 文件可以查看各个依赖包的大小
+
+```shell
+npm run build -- --report
+```
+
+也可以新增插件配置
 
 ```javascript
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
-if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV === "production" && USE_ANALYZER) {
   config.plugin("webpack-bundle-analyzer").use(BundleAnalyzerPlugin);
 }
 ```
 
-执行命令查看包大小图
+安装`cross-env`依赖
 
-```shell
-npm run build --report
+```json
+"scripts"{
+  "analyzer":"cross-env USE_ANALYZER=true npm run build"
+}
 ```
 
 
@@ -275,18 +285,13 @@ chainWebpack: config => {
     maxInitalRequests: 3,// 当这个要被拆分出来的包最大并行请求大于3时，则不拆分
     automaticNameDelimiter: '~', // 名称链接符
     cacheGroups:{
-      //  满足上面的公共规则
+      // 满足上面的公共规则
       vendors:{
           name: 'vendors', // 拆分之后的名称
           test: /[\\/]node_modules[\\/]js[\\/]jweixin[\\/]/, // 匹配路径
           priority: -10, // 设置优先级 防止和自定义组件混合，不进行打包
           
       },
-      default:{
-        minChunks: 2, // 要拆分的chunk最少被引用的次数
-        priority: -20,
-        reuseExistingChunk: true //	如果该chunk中引用了已经被打包，则直接引用该chunk，不会重复打包代码
-      }
       html2canvas: { 
         name: 'html2canvas', // 拆分之后的名称
         test: /[\\/]static[\\/]js[\\/]html2canvas[\\/]/, // 匹配路径

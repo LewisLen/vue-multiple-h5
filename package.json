@@ -30,7 +30,6 @@
     "eslint-plugin-vue": "^6.2.2",
     "postcss-pxtorem": "^5.1.1",
     "prettier": "^2.2.1",
-    "vue-template-compiler": "^2.6.11",
-    "webpack-bundle-analyzer": "^4.4.2"
+    "vue-template-compiler": "^2.6.11"
   }
 }
