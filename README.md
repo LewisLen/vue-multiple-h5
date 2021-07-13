@@ -379,3 +379,28 @@ module.exports = {
   <script src="<%= htmlWebpackPlugin.options.cdn.js[i] %>"></script>
 <% } %>
 ```
+
+
+## 支持scss、less等预编译语言
+
+直接安装对应的loader即可
+
+```shell
+# sass
+npm install -D sass-loader@10.1.1 sass
+```
+
+配置可以使用全局变量
+
+```javascript
+css: {
+  loaderOptions: {
+    sass: {
+      additionalData: `@import "@/assets/css/variables.scss";`,
+    },
+  },
+},
+```
+
+> 需注意 sass-loader 版本问题，用最新版有可能会出现编译报错的问题，最好是使用 sass-loader@10.1.1 版本
+> 注意 `@import "@/assets/css/variables.scss";` 后边需要加`;`

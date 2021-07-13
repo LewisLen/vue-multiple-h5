@@ -71,8 +71,16 @@ module.exports = {
       },
     });
   },
+  css: {
+    loaderOptions: {
+      sass: {
+        additionalData: `@import "@/assets/css/variables.scss";`,
+      },
+    },
+  },
   // 选项...
   devServer: {
+    hot: true,
     proxy: {
       "/api": {
         target: "http://127.0.0.1:3999",

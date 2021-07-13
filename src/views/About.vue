@@ -1,5 +1,6 @@
 <template>
   <div class="about">
+    About Page About Page
     <h1>This is an about page</h1>
   </div>
 </template>
@@ -12,3 +13,14 @@ export default {
   },
 };
 </script>
+<style lang="scss" scoped>
+$color: red;
+.about {
+  color: $color;
+  font-size: 16px;
+  h1 {
+    color: $--color-primary;
+    font-size: 32px;
+  }
+}
+</style>
