@@ -9,12 +9,10 @@ export default {
   data() {
     return {
       path: "",
-      auth: false,
     };
   },
   methods: {
     switchFn() {
-      this.$route.meta.auth = true;
       // 模拟登录之后跳回
       this.$router.replace({
         path: this.path,
@@ -25,8 +23,11 @@ export default {
     console.log(from);
     next((vm) => {
       vm.path = from.fullPath;
-      vm.auth = from.meta.auth;
     });
+  },
+  beforeRouteLeave(to, from, next) {
+    if (to.fullPath === this.path) to.meta.auth = true;
+    next();
   },
 };
 </script>

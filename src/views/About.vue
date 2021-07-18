@@ -18,6 +18,7 @@ $color: red;
 .about {
   color: $color;
   font-size: 16px;
+  background: url("../assets/imgs/logo.png");
   h1 {
     color: $--color-primary;
     font-size: 32px;

@@ -2,7 +2,9 @@
   <div class="content">
     <ul>
       <li v-for="item in list" :key="item._id">
-        <div class="img">img</div>
+        <div class="img">
+          <img src="../assets/imgs/logo.png" alt="商品" />
+        </div>
         <div class="text">
           <div class="title">{{ item.productName }}</div>
           <p class="describe">{{ item.typeText }}</p>
@@ -19,48 +21,10 @@ export default {
   data() {
     return {
       list: [],
-      // list: [
-      //   {
-      //     _id: "001",
-      //     productName: "唐装",
-      //     typeText: "快来买呀快来买呀快来买呀快来买呀",
-      //     typeId: "4.0",
-      //     price: "5000元",
-      //   },
-      //   {
-      //     _id: "002",
-      //     productName: "唐装",
-      //     typeText: "快来买呀快来买呀快来买呀快来买呀",
-      //     typeId: "4.0",
-      //     price: "5000元",
-      //   },
-      //   {
-      //     _id: "003",
-      //     productName: "唐装",
-      //     typeText: "快来买呀快来买呀快来买呀快来买呀",
-      //     typeId: "4.0",
-      //     price: "5000元",
-      //   },
-      //   {
-      //     _id: "004",
-      //     productName: "唐装",
-      //     typeText: "快来买呀快来买呀快来买呀快来买呀",
-      //     typeId: "4.0",
-      //     price: "5000元",
-      //   },
-      //   {
-      //     _id: "005",
-      //     productName: "唐装",
-      //     typeText: "快来买呀快来买呀快来买呀快来买呀",
-      //     typeId: "4.0",
-      //     price: "5000元",
-      //   },
-      // ],
     };
   },
   created() {
     getProductList().then((res) => {
-      // console.log(res);
       this.list = res.data;
     });
   },
@@ -81,6 +45,9 @@ export default {
   width: 192px;
   height: 192px;
   background-color: beige;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .content .text {
   height: 192px;
