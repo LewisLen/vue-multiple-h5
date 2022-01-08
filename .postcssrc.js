@@ -1,5 +1,19 @@
-// 也可以是postcss.config.js
 module.exports = {
+  plugins: {
+    autoprefixer: {
+      overrideBrowserslist: ['Android 4.1', 'iOS 7.1', 'Chrome > 31', 'ff > 31', 'ie >= 8']
+    },
+    'postcss-px-to-viewport': {
+      viewportWidth: 750, // 视窗的宽度，对应的是我们设计稿的宽度，一般是750
+      unitPrecision: 3, // 小数位
+      viewportUnit: 'vw',
+      selectorBlackList: ['.ignore', '.hairlines'], 
+      minPixelValue: 1,
+      mediaQuery: false
+    }
+  }
+  /*
+  postcss-pxtorem插件转换rem
   plugins: {
     "autoprefixer": {},
     "postcss-pxtorem": {
@@ -11,4 +25,5 @@ module.exports = {
       "exclude": /node_modules/
     }
   }
+  */
 }

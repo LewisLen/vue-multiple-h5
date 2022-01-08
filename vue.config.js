@@ -1,93 +1,152 @@
+const fs = require("fs");
 const path = require("path");
+const {
+  isNeedVerbModule,
+  hasMainFile,
+  hasHtmlFile,
+  isDirectory,
+  arrUnique,
+  getProxyInfo,
+  isProd,
+} = require("./lenconfig/utils");
+const { PORT } = require("./lenconfig/devServer");
+
+const MODULE_PAGE_PATH = path.join(__dirname, "src", "modules");
+
+// 获取需要编译的(部分)模块页面
+const getModulePages = (directoryPath) => {
+  let needVerbPages = [];
+  if (isNeedVerbModule().length > 0) {
+    let arrTempDirectory = arrUnique([...isNeedVerbModule()]);
+    arrTempDirectory.forEach((directoryName) => {
+      let tempDirectory = path.join(MODULE_PAGE_PATH, directoryName);
+      if (isDirectory(tempDirectory)) {
+        needVerbPages = [...isNeedVerbModule()];
+      } else {
+        process.stdout.write(
+          `\x1b[31m modules目录下不存在${directoryName}模块。\x1b[0m`
+        );
+        process.exit(0);
+      }
+    });
+  } else {
+    fs.readdirSync(directoryPath).forEach((directoryName) => {
+      let tempDirectory = path.join(MODULE_PAGE_PATH, directoryName);
+      if (isDirectory(tempDirectory)) {
+        needVerbPages.push(directoryName);
+      } else {
+        process.stdout.write(
+          `\x1b[31m目录下存在文件${directoryName},请移除或移出至其它目录下。\x1b[0m`
+        );
+        process.exit(0);
+      }
+    });
+  }
+  console.log(
+    `即将在===${
+      isProd ? process.env.VUE_APP_ENV_CONFIG : "dev"
+    }===环境中编译部署`,
+    needVerbPages.join(),
+    "模块"
+  );
+  return needVerbPages;
+};
+
+// 设置pages的格式
+const setVerbPages = () => {
+  const tempPages = {};
+  getModulePages(MODULE_PAGE_PATH).forEach((directoryName) => {
+    let tempHtml = "";
+    let tempEntry = "";
+    let modulePagePath = `./src/modules/${directoryName}`;
+    if (hasMainFile(modulePagePath)) {
+      tempEntry = `${modulePagePath}/main.js`;
+    } else {
+      process.stdout.write(
+        `\x1b[31m ${directoryName}目录下缺少入口文件 \x1b[0m`
+      );
+      process.exit(0);
+    }
+    if (hasHtmlFile(modulePagePath)) {
+      tempHtml = `${modulePagePath}/index.html`;
+    } else {
+      tempHtml = `./public/index.html`;
+    }
+    tempPages[directoryName] = {
+      entry: tempEntry,
+      template: tempHtml,
+      filename: `${directoryName}.html`,
+      title: `${directoryName}`,
+    };
+  });
+  return tempPages;
+};
+
+let pages = { ...setVerbPages() };
+
 module.exports = {
-  // 部署应用包时的基本 URL
-  publicPath: "./",
-  // 打包前默认会被清除 默认为dist
-  outputDir: "dist/static",
-  // 放置静态资源的目录
-  assetsDir: "static",
-  // 指定index.html
-  indexPath: "index.html",
-  // 是否为运行时版本（不包含编译器）
-  runtimeCompiler: false,
-  // 生产环境是否需要source map
+  publicPath: isProd ? "./" : "/",
   productionSourceMap: false,
-  configureWebpack: {
-    externals: {
-      vue: "Vue",
-      "vue-router": "VueRouter",
-    },
-  },
-  // 链式调用
   chainWebpack: (config) => {
-    // 配置别名
     config.resolve.alias
       .set("@", path.resolve("src"))
-      .set("assets", path.resolve("src/assets"))
-      .set("components", path.resolve("src/components"))
-      .set("views", path.resolve("src/views"));
-    const cdn = {
-      js: [
-        "https://unpkg.com/vue@2.6.11/dist/vue.min.js",
-        "https://unpkg.com/vue-router@3.2.0/dist/vue-router.min.js",
-      ],
-    };
-    config.plugin("html").tap((args) => {
-      args[0].cdn = cdn;
-      return args;
+      .set("components", path.resolve("src/components"));
+    if (isProd) {
+      // 取消预加载设置
+      Object.keys(pages).forEach((page) => {
+        config.plugins.delete(`preload-${page}`);
+        config.plugins.delete(`prefetch-${page}`);
+      });
+    }
+    // 分包策略
+    config.optimization.splitChunks({
+      chunks: "all",
+      cacheGroups: {
+        common: {
+          name: "chunk-common",
+          chunks: "initial",
+          minChunks: 2,
+          maxInitialRequests: 5,
+          minSize: 0,
+          priority: 1,
+          reuseExistingChunk: true,
+          enforce: true,
+        },
+        vendors: {
+          name: "chunk-vendors",
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10,
+          chunks: "initial",
+        },
+      },
     });
-    if (process.env.NODE_ENV === "production") {
+  },
+  configureWebpack: (config) => {
+    if (isProd) {
       config.optimization.minimizer("terser").tap((options) => {
+        // eslint-disable-next-line camelcase
         options[0].terserOptions.compress.drop_console = true;
+        // eslint-disable-next-line camelcase
+        options[0].terserOptions.compress.drop_console = true;
+        // eslint-disable-next-line camelcase
+        options[0].terserOptions.compress.compress.drop_debugger = true;
+        options[0].terserOptions.output.comments = false;
         return options;
       });
     }
-    config.optimization.splitChunks({
-      // 抽离自定义公共组件
-      chunks: "all",
-      minChunks: 1, // 要拆分的chunk最少被引用的次数
-      maxSize: 0,
-      minSize: 30 * 1024, // 分割的chunk最小为30kb
-      // maxAsyncRequests: 5, // 当这个要被拆分出来的包被引用的次数超过5时，则不拆分
-      // maxInitalRequests: 3, // 当这个要被拆分出来的包最大并行请求大于3时，则不拆分
-      automaticNameDelimiter: "~", // 名称链接符
-      cacheGroups: {
-        //  满足上面的公共规则
-        vendors: {
-          name: "vendors", // 拆分之后的名称
-          test: /[\\/]node_modules[\\/]js[\\/]jweixin[\\/]/, // 匹配路径
-          priority: -10, // 设置优先级 防止和自定义组件混合，不进行打包
-        },
-        default: {
-          minChunks: 2, // 要拆分的chunk最少被引用的次数
-          priority: -20,
-          reuseExistingChunk: true, //	如果该chunk中引用了已经被打包，则直接引用该chunk，不会重复打包代码
-        },
-        html2canvas: {
-          name: "html2canvas", // 拆分之后的名称
-          test: /[\\/]static[\\/]js[\\/]html2canvas[\\/]/, // 匹配路径
-          reuseExistingChunk: true,
-        },
-      },
-    });
   },
   css: {
+    sourceMap: false,
     loaderOptions: {
-      sass: {
-        additionalData: `@import "@/assets/css/variables.scss";`,
+      scss: {
+        prependData: `@import "@/assets/style/variables.scss";`,
       },
     },
   },
-  // 选项...
+  pages,
   devServer: {
-    hot: true,
-    proxy: {
-      "/api": {
-        target: "http://127.0.0.1:3999",
-        changeOrigin: true,
-        pathRewrite: { "^/api": "" },
-      },
-    },
+    port: PORT,
+    proxy: getProxyInfo(),
     // 输出eslint警告和错误信息
     overlay: {
       warnings: true,

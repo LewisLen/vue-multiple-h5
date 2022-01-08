@@ -1,18 +1,16 @@
 {
-  "name": "vue-h5",
+  "name": "vue-multiple-h5",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
+    "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "sit": "vue-cli-service build --mode sit",
-    "uat": "vue-cli-service build --mode uat",
-    "lint": "vue-cli-service lint"
+    "build:uat": "vue-cli-service build --mode uat",
+    "lint": "vue-cli-service lint",
   },
   "dependencies": {
-    "axios": "^0.21.1",
     "core-js": "^3.6.5",
-    "qs": "^6.10.1",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
     "vuex": "^3.4.0"
@@ -28,10 +26,23 @@
     "eslint": "^6.7.2",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-vue": "^6.2.2",
-    "postcss-pxtorem": "^5.1.1",
     "prettier": "^2.2.1",
-    "sass": "^1.35.2",
-    "sass-loader": "^10.1.1",
+    "sass": "^1.26.5",
+    "sass-loader": "^8.0.2",
     "vue-template-compiler": "^2.6.11"
+  },
+  "lint-staged": {
+    "src/**/*.{js,json,ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "src/**/*.{html,css,scss,sass}": [
+      "stylelint --fix"
+    ],
+    "src/**/*.vue": [
+      "prettier --write",
+      "eslint --fix",
+      "stylelint --fix"
+    ]
   }
 }
