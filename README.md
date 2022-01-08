@@ -9,12 +9,16 @@ create mutiple page by vue-cli4.5.15
 ## 安装使用
 
 ```shell
+git clone git@github.com:LewisLen/vue-multiple-h5.git
+npm install
 # 这里是以逗号或者分隔模块名称
-npm run dev -- --module vip,page
+npm run serve -- --module vip,page
 npm run dev -- --module vip_page
 # 模块打包
 npm run build -- --module vip,page
 npm run build -- --module vip_page
+# 不同环境
+npm run build:uat -- --module vip_page
 # 全量本地启动即devServe
 npm run serve
 # 全量打包
@@ -47,7 +51,6 @@ pages:{
 
 ## 移动端H5适配
 
-## 移动端适配
 
 ### 方案1：rem+lib-flexible
 
@@ -246,16 +249,19 @@ npx husky add .husky/commit-msg "npx --no-install commitlint --edit $1"
 如果是 vue-cli 改造，则有可能会有冲突，因为在安装之后，@vue/cli-service 也会安装 yorkie，且yorkie fork 自 husky 不兼容。如果还有问题，可以尝试删除 .git/hooks/ 下面的 pre-commit 和 commit-msg 文件再试试，按照 husky 官网再试试。
 
 ```json
-{
-  "gitHooks": {
-    "pre-commit": "lint-staged"
-  },
-   "lint-staged": {
-    "*.{js,vue}": [
-      "vue-cli-service lint",
-      "git add"
-    ]
-  }
+"lint-staged": {
+  "src/**/*.{js,json,ts,tsx}": [
+    "prettier --write",
+    "eslint --fix"
+  ],
+  "src/**/*.{html,css,scss,sass}": [
+    "stylelint --fix"
+  ],
+  "src/**/*.vue": [
+    "prettier --write",
+    "eslint --fix",
+    "stylelint --fix"
+  ]
 }
 ```
 
@@ -306,3 +312,4 @@ module.exports = {
 - [husky官网](https://typicode.github.io/husky/#/?id=manual)
 - https://juejin.cn/post/6951649464637636622#heading-12
 - [@commitlint/config-conventional](https://www.npmjs.com/package/@commitlint/config-conventional)
+- https://github.com/sunniejs/vue-h5-template
