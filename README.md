@@ -87,6 +87,55 @@ module.exports = {
 
 ### 方案2: vm/vh适配方案
 
+
+## 封装axios
+
+安装`axios`和`qs`，利用 interceptors 拦截器对 axios 请求进行封装
+
+```javascript
+// 引用方式一 main.js
+import request from "./api/request";
+Vue.prototype.$http = request;// 挂载到原型对象上
+// 组件中
+this.$http.get("api/productList").then((res) => {
+  console.log(res);
+});
+// 引用方式二：每个请求按模块划分
+// product.js
+import request from "../request";
+import QS from "qs";
+
+export function getProductList(data) {
+  return request({
+    url: "api/productList",
+    method: "get", // 默认是get
+    data: QS.stringify(data),
+  });
+}
+```
+
+取消请求方式
+
+```javascript
+// 方式一
+const cancelToken = axios.CancelToken;
+const source = CancelToken.source();
+axios.post('/productList',{code:'0001'},{
+  cancelToken: source.token
+})
+source.cancel('取消请求')
+// 方式二
+const cancelToken = axios.CancelToken;
+let cancel;
+axios.get('/productList',{
+  cancelToken: new cancelToken(function executor(c){
+    cancel = c;
+  })
+})
+cancel();// 取消请求
+```
+
+
 安装单位转换插件
 
 ```shell
@@ -118,6 +167,12 @@ module.exports = {
 > 脚手架采用的是方案2，方案2可能存在一些兼容性问题，特别是一些低版本手机浏览器。方案1和方案2不要混合使用。
 
 
+
+
+
+
+
+
 ## 预编译语言
 
 直接安装对应的loader即可
@@ -134,6 +189,7 @@ css: {
   sourceMap: false,
   loaderOptions: {
     scss: {
+      // 全局都可以使用的样式
       prependData: `@import "@/assets/style/variables.scss";`,
     },
   },
@@ -156,6 +212,7 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 ```
+
 
 
 ## git提交规范
