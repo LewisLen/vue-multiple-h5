@@ -123,7 +123,7 @@ module.exports = {
 
 ```javascript
 // 引用方式一 main.js
-import request from "./api/request";
+import request from "@/request";
 Vue.prototype.$http = request;// 挂载到原型对象上
 // 组件中
 this.$http.get("api/productList").then((res) => {
@@ -162,6 +162,60 @@ axios.get('/productList',{
   })
 })
 cancel();// 取消请求
+```
+
+
+## vue-router
+
+路由懒加载
+
+```javascript
+// 路由懒加载
+const Task = () => import("../views/Task.vue");// ES6方式
+const routes = [
+  {
+    path: "/task",
+    name: "Task",
+    component: (resolve) => require(["../views/Task.vue"], resolve),
+    meta: {
+      title: "任务",
+      keepAlive: false, // 是否需要缓存
+      auth: false, // 用户权限
+    },
+  }
+]
+```
+
+路由守卫
+
+```javascript
+router.beforeEach((to,from,next) => {
+  // 路由拦截
+  if(!to.meta.auth){
+    console.log('无权限')
+  }
+  // 设置页面标题
+  if(to.meta.title){
+    document.title = to.meta.title;
+  }
+  next();
+})
+```
+
+也可以通过 webpack 中的 require.context(要搜索的目录,是否要搜索子目录,匹配文件的正则表达式) 函数自动注册匹配路由。
+
+```javascript
+// 自动注册路由
+let tempRouters = [];
+const oFiles = require.context("../views", true, /\.vue$/);
+oFiles.keys().forEach((element) => {
+  // element: ./Task.vue
+  let componentName = element.replace(/^\.\//, "").replace(/\.vue$/, "");
+  tempRouters.push({
+    path: "/" + componentName.toLowerCase(),
+    component: () => import("../views/" + componentName),
+  });
+});
 ```
 
 
