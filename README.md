@@ -51,7 +51,6 @@ pages:{
 
 ## 移动端H5适配
 
-
 ### 方案1：rem+lib-flexible
 
 采用的的`lib-flexible`方案，搭配`postcss-pxtorem`插件可以直接在开发过程中用px做单位，插件会根据配置自动转化成rem，就可以直接在项目中写`px`单位，需要注意的是，本工程默认设计稿为 750px。
@@ -86,6 +85,36 @@ module.exports = {
 > 解决方案，安装postcss-pxtorem@5.1.1版本: npm install postcss-pxtorem@5.1.1 -D
 
 ### 方案2: vm/vh适配方案
+
+安装单位转换插件
+
+```shell
+# 自动转换px单位
+npm install postcss-px-to-viewport -D
+```
+
+新增 postcss 相关配置
+
+```javascript
+// .postcssrc.js
+module.exports = {
+  plugins: {
+    autoprefixer: {
+      overrideBrowserslist: ['Android 4.1', 'iOS 7.1', 'Chrome > 31', 'ff > 31', 'ie >= 8']
+    },
+    'postcss-px-to-viewport': {
+      viewportWidth: 375, // 视窗的宽度，对应的是我们设计稿的宽度，一般是750
+      unitPrecision: 3, // 指定`px`转换为视窗单位值的小数位数（很多时候无法整除）
+      viewportUnit: 'vw', // 指定需要转换成的视窗单位，建议使用vw
+      selectorBlackList: ['.ignore'], // 指定不转换为视窗单位的类，可以自定义，可以无限添加,建议定义一至两个通用的类名
+      minPixelValue: 1, // 小于或等于`1px`不转换为视窗单位，你也可以设置为你想要的值
+      mediaQuery: false // 允许在媒体查询中转换`px`
+    }
+  }
+}
+```
+
+> 脚手架采用的是方案2，方案2可能存在一些兼容性问题，特别是一些低版本手机浏览器。方案1和方案2不要混合使用。
 
 
 ## 封装axios
@@ -134,43 +163,6 @@ axios.get('/productList',{
 })
 cancel();// 取消请求
 ```
-
-
-安装单位转换插件
-
-```shell
-# 自动转换px单位
-npm install postcss-px-to-viewport -D
-```
-
-新增 postcss 相关配置
-
-```javascript
-// .postcssrc.js
-module.exports = {
-  plugins: {
-    autoprefixer: {
-      overrideBrowserslist: ['Android 4.1', 'iOS 7.1', 'Chrome > 31', 'ff > 31', 'ie >= 8']
-    },
-    'postcss-px-to-viewport': {
-      viewportWidth: 375, // 视窗的宽度，对应的是我们设计稿的宽度，一般是750
-      unitPrecision: 3, // 指定`px`转换为视窗单位值的小数位数（很多时候无法整除）
-      viewportUnit: 'vw', // 指定需要转换成的视窗单位，建议使用vw
-      selectorBlackList: ['.ignore'], // 指定不转换为视窗单位的类，可以自定义，可以无限添加,建议定义一至两个通用的类名
-      minPixelValue: 1, // 小于或等于`1px`不转换为视窗单位，你也可以设置为你想要的值
-      mediaQuery: false // 允许在媒体查询中转换`px`
-    }
-  }
-}
-```
-
-> 脚手架采用的是方案2，方案2可能存在一些兼容性问题，特别是一些低版本手机浏览器。方案1和方案2不要混合使用。
-
-
-
-
-
-
 
 
 ## 预编译语言
