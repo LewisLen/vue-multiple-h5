@@ -123,16 +123,14 @@ module.exports = {
   },
   configureWebpack: (config) => {
     if (isProd) {
-      config.optimization.minimizer("terser").tap((options) => {
-        // eslint-disable-next-line camelcase
-        options[0].terserOptions.compress.drop_console = true;
-        // eslint-disable-next-line camelcase
-        options[0].terserOptions.compress.drop_console = true;
-        // eslint-disable-next-line camelcase
-        options[0].terserOptions.compress.compress.drop_debugger = true;
-        options[0].terserOptions.output.comments = false;
-        return options;
-      });
+      config.optimization.minimizer[0].options.terserOptions.output.comments = false;
+      // eslint-disable-next-line camelcase
+      config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true;
+      // eslint-disable-next-line camelcase
+      config.optimization.minimizer[0].options.terserOptions.compress.drop_debugger = true;
+      // eslint-disable-next-line camelcase
+      config.optimization.minimizer[0].options.terserOptions.compress.pure_funcs =
+        ["console.log"];
     }
   },
   css: {
