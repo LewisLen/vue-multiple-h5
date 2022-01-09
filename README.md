@@ -219,6 +219,73 @@ oFiles.keys().forEach((element) => {
 ```
 
 
+## externals用cdn链接的方式引入资源
+
+externals 引入方式的作用需谨慎评估，确实能够减少编译包大小，但是需要额外在html文件上添加script标签以引入js文件，这就意味着需要额外的http请求以及更多的解析时间。
+
+
+```javascript
+// vue.config.js
+configureWebpack: config => {
+  config.externals = {
+    // 依赖包名称:赋值给widnow的全局变量名称
+    vue: 'Vue',
+    'vue-router': 'vueRouter'
+  }
+}
+```
+
+这个时候就可以手动在html模版文件中手动引入依赖包的 cdn 链接，需注意引入依赖之间以及和编译打包后的包先后顺序关系。引入的前后顺序没问题，则可以把 main.js 中 import 引入的依赖语句删除。
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+```
+
+如果有很多个 cdn 链接需要引入，则可以借助 html-webpack-plugin 插件进行插入
+
+```javascript
+// vue.config.js
+const externalsList = {
+  css:[
+    "https://cdn.jsdelivr.net/npm/reset.css"
+  ],
+  js:[
+    "https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"
+  ]
+}
+module.exports = {
+  configureWebpack: config => {
+    config.externals = {
+      // 依赖包名称:赋值给widnow的全局变量名称
+      vue: 'Vue',
+      'vue-router': 'vueRouter'
+    }
+  },
+  chainWebpack: config => {
+    config
+      .plugin('html')
+      .tap(args => {
+        args[0].cdn = externalsList
+        return args
+      })
+  }
+}
+```
+
+在 html 模版中引入，可以使用`vue inspect --plugin html`命令来审批配置的一部分
+
+```html
+<% for (var i in htmlWebpackPlugin.options.cdn && htmlWebpackPlugin.options.cdn.css) { %>
+  <link href="<%= htmlWebpackPlugin.options.cdn.css[i] %>" rel="preload" as="style" />
+  <link href="<%= htmlWebpackPlugin.options.cdn.css[i] %>" rel="stylesheet" />
+<% } %>
+  <!-- 使用CDN加速的JS文件，配置在vue.config.js下 -->
+<% for (var i in htmlWebpackPlugin.options.cdn && htmlWebpackPlugin.options.cdn.js) { %>
+  <script src="<%= htmlWebpackPlugin.options.cdn.js[i] %>"></script>
+<% } %>
+```
+
+
 ## 预编译语言
 
 直接安装对应的loader即可
