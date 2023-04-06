@@ -45,7 +45,6 @@ pages:{
 ```
 
 执行几个模块编译需要借助`argv`获取命令行中的参数，通过`--`后边可以添加参数，本工程是以下划线(_)或者逗号(,)进行分割，可以指定多个部分模块进行编译打包。
-
 > 也可以使用 minimist 模块来获取 argv 字段
 
 
@@ -84,7 +83,7 @@ module.exports = {
 > 出现报错: Syntax Error: Error: PostCSS plugin postcss-pxtorem requires PostCSS 8.
 > 解决方案，安装postcss-pxtorem@5.1.1版本: npm install postcss-pxtorem@5.1.1 -D
 
-### 方案2: vm/vh适配方案
+### 方案2: vm/vh适配方案(推荐)
 
 安装单位转换插件
 
@@ -436,6 +435,15 @@ npx husky add .husky/commit-msg "npx --no-install commitlint --edit $1"
 ```
 
 > 如果有`.DS_Store`文件，可以执行`sudo find . -name "*.DS_Store" -type f -delete`命令来删除
+
+
+## 自定义commit规范
+
+pre-commit不生效的问题
+
+查看.git/config文件中的hooksPath是什么，如果是要用husky，则需要配置为`hooksPath=.husky`，如果用默认的，则删除即可。
+
+mac有可能没有权限执行`pre-commit`和`commit-message`脚本，需要执行`chomd 777 .git/hooks/pre-commit`和`chomd 777 .git/hooks/commit-message`赋权限
 
 
 ## stylelint(选用)

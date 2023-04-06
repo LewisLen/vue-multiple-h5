@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+// const SpeedMeasureWebpackPlugin = require("speed-measure-webpack-plugin");
 const {
   isNeedVerbModule,
   hasMainFile,
@@ -88,6 +89,8 @@ module.exports = {
   publicPath: isProd ? "./" : "/",
   productionSourceMap: false,
   chainWebpack: (config) => {
+	// 修复热更新失效
+	config.resolve.symlinks(true);
     config.resolve.alias
       .set("@", path.resolve("src"))
       .set("components", path.resolve("src/components"));
@@ -98,6 +101,8 @@ module.exports = {
         config.plugins.delete(`prefetch-${page}`);
       });
     }
+	// 查看loader编译时间
+	// config.plugin("speed").use(SpeedMeasureWebpackPlugin);
     // 分包策略
     config.optimization.splitChunks({
       chunks: "all",
